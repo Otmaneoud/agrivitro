@@ -16,9 +16,19 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const origin = new URL(request.url).origin;
-        const key = process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"]!;
-        const supabase = createClient(process.env["SUPABASE_URL"]!, key, {
+        const DEFAULT_SUPABASE_URL = "https://ioinvtayrcmkelnyauac.supabase.co";
+        const DEFAULT_SUPABASE_KEY = "sb_publishable_KiU40PqyKYGJjGUgKvqLoA_7Jv-V1ye";
+        const key =
+          process.env["SUPABASE_PUBLISHABLE_KEY"] ??
+          process.env["SUPABASE_ANON_KEY"] ??
+          process.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ??
+          DEFAULT_SUPABASE_KEY;
+        const url =
+          process.env["SUPABASE_URL"] ??
+          process.env["VITE_SUPABASE_URL"] ??
+          DEFAULT_SUPABASE_URL;
+
+        const supabase = createClient(url, key, {
           auth: { persistSession: false },
           global: {
             fetch: (input: RequestInfo | URL, init?: RequestInit) => {
@@ -30,10 +40,18 @@ export const Route = createFileRoute("/sitemap.xml")({
           },
         });
 
-        const [posts, events] = await Promise.all([
-          supabase.from("blog_posts").select("slug,updated_at").eq("status", "published"),
-          supabase.from("events").select("slug,updated_at").eq("status", "published"),
-        ]);
+        let posts: { data: { slug: string; updated_at: string }[] | null } = { data: [] };
+        let events: { data: { slug: string; updated_at: string }[] | null } = { data: [] };
+        try {
+          const res = await Promise.all([
+            supabase.from("blog_posts").select("slug,updated_at").eq("status", "published"),
+            supabase.from("events").select("slug,updated_at").eq("status", "published"),
+          ]);
+          posts = res[0] as typeof posts;
+          events = res[1] as typeof events;
+        } catch (err) {
+          console.error("Sitemap failed to fetch dynamic routes:", err);
+        }
 
         const urls = [
           ...STATIC_PATHS.map((path) => ({

@@ -272,15 +272,17 @@ function HomePage() {
             </div>
           </Reveal>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {data.posts.map((post, index) => (
-              <Reveal key={post.id} delay={index * 80}>
-                <PostCard post={post} />
-              </Reveal>
-            ))}
-          </div>
+          {data?.posts && data.posts.length > 0 ? (
+            <div className="mt-10 grid gap-6 lg:grid-cols-3">
+              {data.posts.map((post, index) => (
+                <Reveal key={post.id} delay={index * 80}>
+                  <PostCard post={post} />
+                </Reveal>
+              ))}
+            </div>
+          ) : null}
 
-          {data.events.length > 0 ? (
+          {data?.events && data.events.length > 0 ? (
             <div className="mt-12">
               <h3 className="flex items-center gap-2 font-display text-xl font-bold text-ink">
                 <CalendarDays className="size-5 text-primary" /> Upcoming events

@@ -2,7 +2,18 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": "npm run build",
+  "build": {
+    "env": {
+      "VITE_SUPABASE_URL": "https://ioinvtayrcmkelnyauac.supabase.co",
+      "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_KiU40PqyKYGJjGUgKvqLoA_7Jv-V1ye",
+      "NITRO_PRESET": "vercel"
+    }
+  },
   "env": {
+    "SUPABASE_URL": "https://ioinvtayrcmkelnyauac.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_KiU40PqyKYGJjGUgKvqLoA_7Jv-V1ye",
+    "VITE_SUPABASE_URL": "https://ioinvtayrcmkelnyauac.supabase.co",
+    "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_KiU40PqyKYGJjGUgKvqLoA_7Jv-V1ye",
     "NITRO_PRESET": "vercel"
   }
 }
